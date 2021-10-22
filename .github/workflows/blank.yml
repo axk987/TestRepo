@@ -25,6 +25,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Qodana - Linters
-        uses: JetBrains/qodana-action@v3.2.1
+  - name: Qodana - Code Inspection
+      timeout-minutes: 600
+      run: docker run -v ${GITHUB_WORKSPACE}:/data/project -v ${GITHUB_WORKSPACE}/qodana:/data/results jetbrains/qodana --save-report
+
 
