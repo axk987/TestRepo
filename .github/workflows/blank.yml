@@ -25,8 +25,18 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
           
-      - name: Qodana - Linters
-        uses: JetBrains/qodana-action@v3.2.1
+      # Runs Qodana
+      - name: Qodana - Code Inspection
+        timeout-minutes: 600
+        run: docker run -v ${GITHUB_WORKSPACE}:/data/project -v ${GITHUB_WORKSPACE}/qodana:/data/results jetbrains/qodana:2020.3-eap --save-report
+
+      # Archives Qodana results to workflow artifacts
+      - name: Archive results
+        uses: actions/upload-artifact@v2
+        with:
+          name: qodana-results
+          if-no-files-found: error
+          path: qodana/report/results
         
         # Prints Qodana results
       - name: Print results
